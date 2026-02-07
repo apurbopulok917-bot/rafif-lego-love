@@ -3,34 +3,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
     const prizes = [
         { 
-            img: "./img/story-1.jpg", 
+            img: "./img/story-1.jpg", // JPG (GitHub Screenshot)
             title: "Chapter 1: The Discovery",
             text: "I spent a lifetime looking for the rarest 'Chase' figure... and then I found you.",
-            bg: "./img/bg-1.jpg" // Change to .png if your file is PNG
+            bg: "./img/bg-1.png"      // PNG (User Request)
         }, 
         { 
             img: "./img/story-2.jpg", 
             title: "Chapter 2: The Match",
             text: "I realized that the best collectibles come in pairs. We fit perfectly.",
-            bg: "./img/bg-1.jpg"
+            bg: "./img/bg-1.png"
         }, 
         { 
             img: "./img/story-3.jpg", 
             title: "Chapter 3: The World",
             text: "From the Jasmine of Damascus to the Sakura of Japan, you make my world beautiful.",
-            bg: "./img/bg-2.jpg" 
+            bg: "./img/bg-2.png" 
         }, 
         { 
             img: "./img/story-4.jpg", 
             title: "Chapter 4: The Promise",
             text: "I promise to love you through it all. I'd even walk across these for you.",
-            bg: "./img/bg-2.jpg"
+            bg: "./img/bg-2.png"
         },
         { 
             img: "./img/story-5.jpg", 
             title: "Chapter 5: The Truth",
             text: "Because simply put: إنتي قلببي (Enti Qalbi). You are my heart.",
-            bg: "./img/bg-3.jpg" 
+            bg: "./img/bg-3.png" 
         }
     ];
 
@@ -68,16 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startBtn.addEventListener("click", () => {
             welcomeScreen.classList.add("hidden");
             unboxingScreen.classList.remove("hidden");
-            
-            // Attempt to play music
-            if(music) {
-                music.volume = 0.5;
-                music.play().catch(error => {
-                    console.log("Music play failed (browser policy): ", error);
-                });
-            }
-
-            updateBackground();
+            updateBackground(); // Load the first BG immediately
         });
     }
 
@@ -128,8 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentIndex++;
                 resetToClosedBox();
             } else {
+                // End of slides -> Go to Question
                 unboxingScreen.classList.add("hidden");
                 questionScreen.classList.remove("hidden");
+                
+                // --- MUSIC STARTS HERE ---
+                if(music) {
+                    music.volume = 0.5; // Softly start
+                    music.play().catch(error => console.log("Music blocked:", error));
+                }
             }
         });
     }
@@ -178,9 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if(container) container.classList.add("celebration-mode");
             
-            // Celebration Background (Using bg-1.jpg or .png)
-            if(bgLayer) bgLayer.style.backgroundImage = "url('./img/bg-1.jpg')"; 
+            // Celebration BG (Using bg-1.png)
+            if(bgLayer) bgLayer.style.backgroundImage = "url('./img/bg-1.png')"; 
             
+            // Music Volume Up
             if(music) music.volume = 1.0; 
         });
     }

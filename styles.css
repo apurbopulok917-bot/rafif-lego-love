@@ -204,3 +204,17 @@ body {
 .hidden { display: none !important; }
 .buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
 #noBtn { position: relative; transition: 0.1s; }
+
+/* RESTART BUTTON STYLE */
+#restartBtn {
+    background: rgba(255, 255, 255, 0.2) !important; /* Semi-transparent */
+    border: 1px solid #ffd700;
+    color: #ffd700 !important;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+#restartBtn:hover {
+    background: rgba(255, 215, 0, 0.3) !important;
+    transform: scale(1.05);
+}

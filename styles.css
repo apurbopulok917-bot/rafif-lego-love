@@ -15,8 +15,8 @@ body {
     top: 0; left: 0; width: 100%; height: 100%;
     background-size: cover;
     background-position: center;
-    /* Default Background */
-    background-image: url('./img/bg-1.png'); 
+    /* CHANGE TO .png IF YOUR FILE IS PNG */
+    background-image: url('./img/bg-1.jpg'); 
     transition: background-image 1s ease-in-out; 
     z-index: -2;
 }
@@ -177,7 +177,6 @@ body {
     100% { transform: translateY(0px) rotate(0deg); }
 }
 
-/* Special float for center image */
 .f3 { animation: centerFloat 6s ease-in-out infinite; }
 @keyframes centerFloat {
     0% { transform: translateX(-50%) translateY(0px); }
@@ -185,7 +184,7 @@ body {
     100% { transform: translateX(-50%) translateY(0px); }
 }
 
-/* RESTART BUTTON STYLE */
+/* RESTART BUTTON */
 #restartBtn {
     margin-top: 20px;
     background: rgba(255, 255, 255, 0.2) !important;

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Rafif ❤️</title>
+    <link rel="stylesheet" href="https://unpkg.com/@sakun/system.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Hind+Siliguri&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        
+        <div id="welcome-screen">
+            <h2>The Rafif Collection</h2>
+            <p><strong>Series:</strong> Limited Edition</p>
+            <p><strong>Rarity:</strong> Ultra Secret Rare</p>
+            <br>
+            <p>Every box tells a part of our story...</p>
+            <button class="btn primary" id="startBtn">Start Unboxing &rarr;</button>
+        </div>
+
+        <div id="unboxing-screen" class="hidden">
+            <h3 id="slide-title">Chapter 1</h3>
+            
+            <div class="image-area">
+                <div id="glow-effect" class="sunburst hidden"></div>
+                <img id="main-image" src="./img/box-closed.jpg" alt="Mystery Box">
+            </div>
+            
+            <p id="caption-text">Tap below to open...</p>
+            
+            <div class="controls">
+                <button class="btn" id="nextBtn">Open Box 📦</button>
+            </div>
+        </div>
+
+        <div id="question-screen" class="hidden">
+            <h2 class="bengali-text">Will you be my Valentine, Babu?</h2>
+            <p class="arabic-text">إنتي قلببي</p>
+            
+            <div class="buttons">
+                <button class="btn primary" id="yesBtn">YES! (Of course)</button>
+                <button class="btn" id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="success-screen" class="hidden">
+            <h1>YAY!!!</h1>
+            <img src="./img/us.jpg" alt="Celebration" class="final-img">
+            <p>Happy Valentine's Day!</p>
+            <p>09.07.1992 - Forever</p>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

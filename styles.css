@@ -31,7 +31,6 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     
-    /* ⚠️ IMPORTANT: Match this to your actual file (.jpg or .png) */
     background-image: url('./img/bg-1.jpg'); 
     
     transition: background-image 1.0s ease-in-out; 

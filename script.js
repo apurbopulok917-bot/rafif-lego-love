@@ -29,21 +29,16 @@ const prizes = [
         title: "Chapter 5: The Truth",
         text: "Because simply put: إنتي قلببي (Enti Qalbi). You are my heart.",
         bg: "./img/bg-3.jpg" // Palace Scene
-    },
-    // THE BRIDGE
-    {
-        img: null, 
-        title: "One last thing...",
-        text: "So I have a question for my Babu...",
-        bg: "./img/bg-3.jpg"
     }
 ];
 
+// STATE VARIABLES
 let currentIndex = 0;
 let isBoxOpen = false; 
-let tapCount = 0; // Gamification counter
+let tapCount = 0; 
+const tapsRequired = 3;
 
-// Elements
+// ELEMENTS
 const bgLayer = document.getElementById("bg-layer");
 const music = document.getElementById("bg-music");
 const welcomeScreen = document.getElementById("welcome-screen");
@@ -68,58 +63,61 @@ const noBtn = document.getElementById("noBtn");
 startBtn.addEventListener("click", () => {
     welcomeScreen.classList.add("hidden");
     unboxingScreen.classList.remove("hidden");
+    
+    // Attempt to play music
     music.volume = 0.5;
-    music.play().catch(e => console.log("Audio needs interaction first")); // Autoplay fix
+    music.play().catch(error => {
+        console.log("Music play failed (browser policy): ", error);
+    });
+
+    // Initialize first slide background
+    updateBackground();
 });
 
-// 2. GAMIFICATION: TAP THE BOX
+// 2. GAMIFICATION: TAP BOX
 mainImage.addEventListener("click", () => {
-    if (!isBoxOpen && currentIndex < prizes.length) {
+    if (!isBoxOpen) {
         tapCount++;
         
-        // Update Meter
-        let percentage = (tapCount / 3) * 100;
+        // Update Visual Meter
+        let percentage = (tapCount / tapsRequired) * 100;
         tapFill.style.width = percentage + "%";
 
-        // Shake Effect
+        // Shake Animation
         mainImage.style.transform = `rotate(${Math.random() * 10 - 5}deg) scale(0.95)`;
         setTimeout(() => mainImage.style.transform = "rotate(0deg) scale(1)", 100);
 
-        if (tapCount >= 3) {
+        // Check if unlocked
+        if (tapCount >= tapsRequired) {
             revealPrize();
-            tapMeter.classList.add("hidden"); // Hide meter once opened
-            tapCount = 0; // Reset for next time (optional)
         }
     }
 });
 
-// 3. REVEAL LOGIC
+// 3. REVEAL PRIZE
 function revealPrize() {
+    isBoxOpen = true;
     const prize = prizes[currentIndex];
     
-    // Update Image
-    if (prize.img) {
-        mainImage.src = prize.img;
-        glowEffect.classList.remove("hidden");
-    } else {
-        glowEffect.classList.add("hidden");
-    }
+    // Show Image
+    mainImage.src = prize.img;
+    glowEffect.classList.remove("hidden");
     
-    // Update Text
+    // Show Text
     captionText.innerText = prize.text; 
     slideTitle.innerText = prize.title;
 
-    // Change Background Scene
-    bgLayer.style.backgroundImage = `url('${prize.bg}')`;
+    // Hide Meter
+    tapMeter.classList.add("hidden");
 
-    isBoxOpen = true;
-    
-    // Enable Next Button
+    // Enable Buttons
     nextBtn.disabled = false;
-    nextBtn.innerText = (currentIndex === prizes.length - 1) ? "Ask the Question ❤️" : "Next Chapter ➡️";
     
-    // Enable Back Button (if not first slide)
-    backBtn.disabled = (currentIndex === 0);
+    if (currentIndex === prizes.length - 1) {
+        nextBtn.innerText = "Ask the Question ❤️";
+    } else {
+        nextBtn.innerText = "Next Chapter ➡️";
+    }
 }
 
 // 4. NEXT BUTTON
@@ -128,7 +126,7 @@ nextBtn.addEventListener("click", () => {
         currentIndex++;
         resetToClosedBox();
     } else {
-        // End of slides -> Question
+        // End of slides -> Go to Question
         unboxingScreen.classList.add("hidden");
         questionScreen.classList.remove("hidden");
     }
@@ -142,42 +140,51 @@ backBtn.addEventListener("click", () => {
     }
 });
 
+// 6. RESET LOGIC (For Next/Back)
 function resetToClosedBox() {
     isBoxOpen = false;
     tapCount = 0;
-    tapFill.style.width = "0%";
-    tapMeter.classList.remove("hidden"); // Show meter again
     
+    // Visual Resets
     mainImage.src = "./img/box-closed.jpg";
     glowEffect.classList.add("hidden");
+    tapMeter.classList.remove("hidden");
+    tapFill.style.width = "0%";
     
+    // Text Resets
     slideTitle.innerText = "Chapter " + (currentIndex + 1);
-    captionText.innerText = "Tap the box 3 times to open...";
+    captionText.innerText = "Tap the box 3 times to break the seal...";
     
-    nextBtn.disabled = true; // Must play game to proceed
+    // Button Resets
+    nextBtn.disabled = true;
     nextBtn.innerText = "Locked 🔒";
-    
-    // Set background to previous slide's BG
-    bgLayer.style.backgroundImage = `url('${prizes[currentIndex].bg}')`;
+    backBtn.disabled = (currentIndex === 0);
+
+    // Update Background for the new chapter
+    updateBackground();
 }
 
-// 6. QUESTION & SUCCESS
+function updateBackground() {
+    if (prizes[currentIndex] && prizes[currentIndex].bg) {
+        bgLayer.style.backgroundImage = `url('${prizes[currentIndex].bg}')`;
+    }
+}
+
+// 7. QUESTION SCREEN LOGIC
 yesBtn.addEventListener("click", () => {
     questionScreen.classList.add("hidden");
     successScreen.classList.remove("hidden");
-    
-    // Play Celebration Sound (optional tweak to music)
-    music.volume = 1.0; 
+    music.volume = 1.0; // Volume up for celebration!
 });
 
-// Runaway No Button
+// Runaway NO Button
 noBtn.addEventListener("mouseover", moveButton);
 noBtn.addEventListener("touchstart", moveButton);
 
 function moveButton() {
     const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
     const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    noBtn.style.position = "absolute";
+    noBtn.style.position = "fixed"; // Fixed prevents it from breaking layout
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }

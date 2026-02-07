@@ -1,221 +1,209 @@
-/* BACKGROUNDS & LAYOUT */
-body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-    overflow: hidden; 
-    background-color: #2c003e; 
-}
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- CONFIGURATION ---
+    const prizes = [
+        { 
+            img: "./img/story-1.jpg", 
+            title: "Chapter 1: The Discovery",
+            text: "I spent a lifetime looking for the rarest 'Chase' figure... and then I found you.",
+            bg: "./img/bg-1.jpg" // Change to .png if your file is PNG
+        }, 
+        { 
+            img: "./img/story-2.jpg", 
+            title: "Chapter 2: The Match",
+            text: "I realized that the best collectibles come in pairs. We fit perfectly.",
+            bg: "./img/bg-1.jpg"
+        }, 
+        { 
+            img: "./img/story-3.jpg", 
+            title: "Chapter 3: The World",
+            text: "From the Jasmine of Damascus to the Sakura of Japan, you make my world beautiful.",
+            bg: "./img/bg-2.jpg" 
+        }, 
+        { 
+            img: "./img/story-4.jpg", 
+            title: "Chapter 4: The Promise",
+            text: "I promise to love you through it all. I'd even walk across these for you.",
+            bg: "./img/bg-2.jpg"
+        },
+        { 
+            img: "./img/story-5.jpg", 
+            title: "Chapter 5: The Truth",
+            text: "Because simply put: إنتي قلببي (Enti Qalbi). You are my heart.",
+            bg: "./img/bg-3.jpg" 
+        }
+    ];
 
-#bg-layer {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-size: cover;
-    background-position: center;
-    /* Default Background */
-    background-image: url('./img/bg-1.png'); 
-    transition: background-image 1s ease-in-out; 
-    z-index: -2;
-}
+    // STATE VARIABLES
+    let currentIndex = 0;
+    let isBoxOpen = false; 
+    let tapCount = 0; 
+    const tapsRequired = 3;
 
-.overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.4); 
-    z-index: -1;
-}
+    // ELEMENTS
+    const bgLayer = document.getElementById("bg-layer");
+    const music = document.getElementById("bg-music");
+    const welcomeScreen = document.getElementById("welcome-screen");
+    const unboxingScreen = document.getElementById("unboxing-screen");
+    const questionScreen = document.getElementById("question-screen");
+    const successScreen = document.getElementById("success-screen");
+    const container = document.querySelector(".container");
 
-.container {
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.95); 
-    border: 4px solid #d4af37; /* Gold Border */
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); 
-    max-width: 450px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-    border-radius: 8px;
-    z-index: 10;
-    transition: all 0.5s ease;
-}
+    const startBtn = document.getElementById("startBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const mainImage = document.getElementById("main-image");
+    const captionText = document.getElementById("caption-text");
+    const slideTitle = document.getElementById("slide-title");
+    const glowEffect = document.getElementById("glow-effect");
+    const tapMeter = document.getElementById("tap-meter");
+    const tapFill = document.getElementById("tap-fill");
 
-/* IMAGES & INTERACTION */
-.image-area {
-    position: relative;
-    width: 100%;
-    height: 320px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px 0;
-}
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const restartBtn = document.getElementById("restartBtn");
 
-#main-image {
-    max-width: 90%;
-    max-height: 90%;
-    border: 3px solid #333;
-    background: #fff;
-    cursor: pointer; 
-    transition: transform 0.1s;
-    z-index: 2;
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
-}
+    // 1. START EXPERIENCE
+    if(startBtn) {
+        startBtn.addEventListener("click", () => {
+            welcomeScreen.classList.add("hidden");
+            unboxingScreen.classList.remove("hidden");
+            
+            // Attempt to play music
+            if(music) {
+                music.volume = 0.5;
+                music.play().catch(error => {
+                    console.log("Music play failed (browser policy): ", error);
+                });
+            }
 
-#main-image:active {
-    transform: scale(0.95);
-}
+            updateBackground();
+        });
+    }
 
-/* GAMIFICATION: TAP METER */
-#tap-meter {
-    width: 80%;
-    height: 12px;
-    background: #eee;
-    border: 2px solid #333;
-    margin: 10px auto;
-    border-radius: 6px;
-    overflow: hidden;
-}
+    // 2. GAMIFICATION: TAP BOX
+    if(mainImage) {
+        mainImage.addEventListener("click", () => {
+            if (!isBoxOpen) {
+                tapCount++;
+                let percentage = (tapCount / tapsRequired) * 100;
+                if(tapFill) tapFill.style.width = percentage + "%";
 
-#tap-fill {
-    height: 100%;
-    width: 0%; 
-    background: #ff4d4d;
-    transition: width 0.2s;
-}
+                mainImage.style.transform = `rotate(${Math.random() * 10 - 5}deg) scale(0.95)`;
+                setTimeout(() => mainImage.style.transform = "rotate(0deg) scale(1)", 100);
 
-/* BUTTONS */
-.controls {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 15px;
-}
+                if (tapCount >= tapsRequired) {
+                    revealPrize();
+                }
+            }
+        });
+    }
 
-.btn {
-    flex: 1;
-    font-size: 0.9rem !important;
-    cursor: pointer;
-}
+    // 3. REVEAL PRIZE
+    function revealPrize() {
+        isBoxOpen = true;
+        const prize = prizes[currentIndex];
+        
+        mainImage.src = prize.img;
+        if(glowEffect) glowEffect.classList.remove("hidden");
+        
+        captionText.innerText = prize.text; 
+        slideTitle.innerText = prize.title;
 
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: #ccc !important;
-    box-shadow: none !important;
-}
+        if(tapMeter) tapMeter.classList.add("hidden");
 
-/* --- CELEBRATION MODE (GLASSMORPHISM) --- */
-.container.celebration-mode {
-    background: rgba(20, 0, 40, 0.6); /* Dark see-through tint */
-    backdrop-filter: blur(8px);       /* Frost effect */
-    border: 2px solid rgba(255, 215, 0, 0.5); 
-    box-shadow: 0 0 50px rgba(255, 215, 0, 0.3); 
-    color: white; 
-}
+        nextBtn.disabled = false;
+        
+        if (currentIndex === prizes.length - 1) {
+            nextBtn.innerText = "Ask the Question ❤️";
+        } else {
+            nextBtn.innerText = "Next Chapter ➡️";
+        }
+    }
 
-#success-screen h1 {
-    font-size: 3rem;
-    color: #ffd700; 
-    text-shadow: 0 0 15px #ff00de; 
-    margin-bottom: 0.5rem;
-}
+    // 4. NEXT BUTTON
+    if(nextBtn) {
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < prizes.length - 1) {
+                currentIndex++;
+                resetToClosedBox();
+            } else {
+                unboxingScreen.classList.add("hidden");
+                questionScreen.classList.remove("hidden");
+            }
+        });
+    }
 
-#success-screen p {
-    color: #fff;
-    font-size: 1.2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
+    // 5. BACK BUTTON
+    if(backBtn) {
+        backBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                resetToClosedBox();
+            }
+        });
+    }
 
-.date-text {
-    font-family: 'Amiri', serif; 
-    color: #ffb7e6 !important; 
-    margin-bottom: 40px; 
-}
+    // 6. RESET LOGIC
+    function resetToClosedBox() {
+        isBoxOpen = false;
+        tapCount = 0;
+        
+        mainImage.src = "./img/box-closed.jpg";
+        if(glowEffect) glowEffect.classList.add("hidden");
+        if(tapMeter) tapMeter.classList.remove("hidden");
+        if(tapFill) tapFill.style.width = "0%";
+        
+        slideTitle.innerText = "Chapter " + (currentIndex + 1);
+        captionText.innerText = "Tap the box 3 times to break the seal...";
+        
+        nextBtn.disabled = true;
+        nextBtn.innerText = "Locked 🔒";
+        backBtn.disabled = (currentIndex === 0);
 
-/* FLOATING ORBS */
-.floating-container {
-    position: relative;
-    height: 350px;
-    width: 100%;
-}
+        updateBackground();
+    }
 
-.floater {
-    position: absolute;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #ffd700; 
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); 
-    animation: float 6s ease-in-out infinite;
-    transition: transform 0.3s;
-}
+    function updateBackground() {
+        if (prizes[currentIndex] && prizes[currentIndex].bg && bgLayer) {
+            bgLayer.style.backgroundImage = `url('${prizes[currentIndex].bg}')`;
+        }
+    }
 
-.floater:hover {
-    transform: scale(1.1);
-    z-index: 100;
-}
+    // 7. QUESTION SCREEN LOGIC
+    if(yesBtn) {
+        yesBtn.addEventListener("click", () => {
+            questionScreen.classList.add("hidden");
+            successScreen.classList.remove("hidden");
+            
+            if(container) container.classList.add("celebration-mode");
+            
+            // Celebration Background (Using bg-1.jpg or .png)
+            if(bgLayer) bgLayer.style.backgroundImage = "url('./img/bg-1.jpg')"; 
+            
+            if(music) music.volume = 1.0; 
+        });
+    }
 
-/* Orb Positions */
-.f1 { width: 70px; height: 70px; top: 5%; left: 5%; animation-duration: 5s; }
-.f2 { width: 85px; height: 85px; top: 15%; right: 5%; animation-duration: 7s; }
-.f3 { 
-    width: 140px; height: 140px; 
-    top: 35%; left: 50%; 
-    transform: translateX(-50%); /* Center */
-    border: 4px solid #fff; 
-    box-shadow: 0 0 40px rgba(255, 0, 220, 0.6); 
-    z-index: 10;
-}
-.f4 { width: 60px; height: 60px; bottom: 10%; left: 15%; animation-duration: 8s; }
-.f5 { width: 75px; height: 75px; bottom: 20%; right: 10%; animation-duration: 6s; }
+    // 8. RESTART
+    if(restartBtn) {
+        restartBtn.addEventListener("click", () => {
+            location.reload();
+        });
+    }
 
-@keyframes float {
-    0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(3deg); } 
-    100% { transform: translateY(0px) rotate(0deg); }
-}
+    // Runaway NO Button
+    if(noBtn) {
+        noBtn.addEventListener("mouseover", moveButton);
+        noBtn.addEventListener("touchstart", moveButton);
+    }
 
-/* Special float for center image */
-.f3 { animation: centerFloat 6s ease-in-out infinite; }
-@keyframes centerFloat {
-    0% { transform: translateX(-50%) translateY(0px); }
-    50% { transform: translateX(-50%) translateY(-10px); }
-    100% { transform: translateX(-50%) translateY(0px); }
-}
+    function moveButton() {
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        noBtn.style.position = "fixed"; 
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    }
 
-/* RESTART BUTTON STYLE */
-#restartBtn {
-    margin-top: 20px;
-    background: rgba(255, 255, 255, 0.2) !important;
-    border: 1px solid #ffd700;
-    color: #ffd700 !important;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
-}
-
-#restartBtn:hover {
-    background: rgba(255, 215, 0, 0.3) !important;
-    transform: scale(1.05);
-}
-
-/* SUNBURST GLOW */
-.sunburst {
-    position: absolute;
-    width: 350px; height: 350px;
-    background: repeating-conic-gradient(from 0deg, #fff0f5 0deg 30deg, #ffc2cd 30deg 60deg);
-    border-radius: 50%;
-    animation: spin 20s linear infinite;
-    z-index: 1;
-    opacity: 0.6;
-}
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* FONTS & UTILS */
-.arabic-text { font-family: 'Amiri', serif; font-size: 1.6rem; color: #d63384; }
-.bengali-text { font-family: 'Hind Siliguri', sans-serif; font-size: 1.3rem; }
-
-.hidden { display: none !important; }
-.buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-#noBtn { position: relative; transition: 0.1s; }
+}); // End of DOMContentLoaded

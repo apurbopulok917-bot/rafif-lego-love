@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- CONFIGURATION ---
     const prizes = [
         { 
-            img: "./img/story-1.jpg", // JPG (GitHub Screenshot)
+            img: "./img/story-1.jpg", 
             title: "Chapter 1: The Discovery",
             text: "I spent a lifetime looking for the rarest 'Chase' figure... and then I found you.",
-            bg: "./img/bg-1.png"      // PNG (User Request)
+            bg: "./img/bg-1.png"
         }, 
         { 
             img: "./img/story-2.jpg", 
@@ -34,13 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    // STATE VARIABLES
     let currentIndex = 0;
     let isBoxOpen = false; 
     let tapCount = 0; 
     const tapsRequired = 3;
 
-    // ELEMENTS
     const bgLayer = document.getElementById("bg-layer");
     const music = document.getElementById("bg-music");
     const welcomeScreen = document.getElementById("welcome-screen");
@@ -63,16 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const noBtn = document.getElementById("noBtn");
     const restartBtn = document.getElementById("restartBtn");
 
-    // 1. START EXPERIENCE
     if(startBtn) {
         startBtn.addEventListener("click", () => {
             welcomeScreen.classList.add("hidden");
             unboxingScreen.classList.remove("hidden");
-            updateBackground(); // Load the first BG immediately
+            updateBackground();
         });
     }
 
-    // 2. GAMIFICATION: TAP BOX
     if(mainImage) {
         mainImage.addEventListener("click", () => {
             if (!isBoxOpen) {
@@ -90,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. REVEAL PRIZE
     function revealPrize() {
         isBoxOpen = true;
         const prize = prizes[currentIndex];
@@ -112,27 +106,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. NEXT BUTTON
     if(nextBtn) {
         nextBtn.addEventListener("click", () => {
             if (currentIndex < prizes.length - 1) {
                 currentIndex++;
                 resetToClosedBox();
             } else {
-                // End of slides -> Go to Question
                 unboxingScreen.classList.add("hidden");
                 questionScreen.classList.remove("hidden");
                 
-                // --- MUSIC STARTS HERE ---
                 if(music) {
-                    music.volume = 0.5; // Softly start
+                    music.volume = 0.5;
                     music.play().catch(error => console.log("Music blocked:", error));
                 }
             }
         });
     }
 
-    // 5. BACK BUTTON
     if(backBtn) {
         backBtn.addEventListener("click", () => {
             if (currentIndex > 0) {
@@ -142,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. RESET LOGIC
     function resetToClosedBox() {
         isBoxOpen = false;
         tapCount = 0;
@@ -168,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 7. QUESTION SCREEN LOGIC
     if(yesBtn) {
         yesBtn.addEventListener("click", () => {
             questionScreen.classList.add("hidden");
@@ -176,22 +164,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if(container) container.classList.add("celebration-mode");
             
-            // Celebration BG (Using bg-1.png)
             if(bgLayer) bgLayer.style.backgroundImage = "url('./img/bg-1.png')"; 
             
-            // Music Volume Up
             if(music) music.volume = 1.0; 
         });
     }
 
-    // 8. RESTART
     if(restartBtn) {
         restartBtn.addEventListener("click", () => {
             location.reload();
         });
     }
 
-    // Runaway NO Button
     if(noBtn) {
         noBtn.addEventListener("mouseover", moveButton);
         noBtn.addEventListener("touchstart", moveButton);
@@ -205,4 +189,4 @@ document.addEventListener('DOMContentLoaded', () => {
         noBtn.style.top = y + "px";
     }
 
-}); // End of DOMContentLoaded
+});

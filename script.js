@@ -195,3 +195,10 @@ function moveButton() {
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
+// 8. RESTART BUTTON LOGIC
+const restartBtn = document.getElementById("restartBtn");
+
+restartBtn.addEventListener("click", () => {
+    // Reloads the page to start fresh
+    location.reload(); 
+});

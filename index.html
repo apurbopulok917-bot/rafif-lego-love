@@ -9,15 +9,21 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    
+    <div id="bg-layer"></div>
+    <div class="overlay"></div> <audio id="bg-music" loop>
+        <source src="./img/music.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="container">
         
         <div id="welcome-screen">
             <h2>The Rafif Collection</h2>
-            <p><strong>Series:</strong> Limited Edition</p>
+            <p><strong>Series:</strong> 1992 Limited Edition</p>
             <p><strong>Rarity:</strong> Ultra Secret Rare</p>
             <br>
-            <p>Every box tells a part of our story...</p>
-            <button class="btn primary" id="startBtn">Start Unboxing &rarr;</button>
+            <p>Turn up your volume 🔊</p>
+            <button class="btn primary" id="startBtn">Enter the Palace &rarr;</button>
         </div>
 
         <div id="unboxing-screen" class="hidden">
@@ -28,10 +34,15 @@
                 <img id="main-image" src="./img/box-closed.jpg" alt="Mystery Box">
             </div>
             
-            <p id="caption-text">Tap below to open...</p>
+            <p id="caption-text">Tap the box 3 times to break the seal!</p>
             
+            <div id="tap-meter" class="hidden">
+                <div id="tap-fill"></div>
+            </div>
+
             <div class="controls">
-                <button class="btn" id="nextBtn">Open Box 📦</button>
+                <button class="btn secondary" id="backBtn" disabled>&larr; Back</button>
+                <button class="btn" id="nextBtn" disabled>Open Box 📦</button>
             </div>
         </div>
 
@@ -47,9 +58,15 @@
 
         <div id="success-screen" class="hidden">
             <h1>YAY!!!</h1>
-            <img src="./img/us.jpg" alt="Celebration" class="final-img">
             <p>Happy Valentine's Day!</p>
-            <p>09.07.1992 - Forever</p>
+            <p class="date-text">21st of August 2025 - Forever &#8734;</p>
+            
+            <div class="floating-container">
+                <img src="./img/float-1.jpg" class="floater f1">
+                <img src="./img/float-2.jpg" class="floater f2">
+                <img src="./img/us.jpg"       class="floater f3"> <img src="./img/float-3.jpg" class="floater f4">
+                <img src="./img/float-4.jpg" class="floater f5">
+            </div>
         </div>
 
     </div>

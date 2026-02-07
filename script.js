@@ -4,7 +4,7 @@ const prizes = [
         img: "./img/story-1.jpg", 
         title: "Chapter 1: The Discovery",
         text: "I spent a lifetime looking for the rarest 'Chase' figure... and then I found you.",
-        bg: "./img/bg-1.png" // Using PNG
+        bg: "./img/bg-1.png" 
     }, 
     { 
         img: "./img/story-2.jpg", 
@@ -16,7 +16,7 @@ const prizes = [
         img: "./img/story-3.jpg", 
         title: "Chapter 3: The World",
         text: "From the Jasmine of Damascus to the Sakura of Japan, you make my world beautiful.",
-        bg: "./img/bg-2.png" // Using PNG
+        bg: "./img/bg-2.png" 
     }, 
     { 
         img: "./img/story-4.jpg", 
@@ -28,7 +28,7 @@ const prizes = [
         img: "./img/story-5.jpg", 
         title: "Chapter 5: The Truth",
         text: "Because simply put: إنتي قلببي (Enti Qalbi). You are my heart.",
-        bg: "./img/bg-3.png" // Using PNG
+        bg: "./img/bg-3.png" 
     }
 ];
 
@@ -178,11 +178,19 @@ yesBtn.addEventListener("click", () => {
     // TRIGGER CELEBRATION MODE
     document.querySelector(".container").classList.add("celebration-mode");
     
-    // Switch background to the beautiful one (e.g. bg-3.png or bg-1.png)
+    // Switch background to the beautiful one (Using bg-1.png for the finale)
     bgLayer.style.backgroundImage = "url('./img/bg-1.png')"; 
     
     music.volume = 1.0; 
 });
+
+// 8. RESTART BUTTON LOGIC
+const restartBtn = document.getElementById("restartBtn");
+if(restartBtn) {
+    restartBtn.addEventListener("click", () => {
+        location.reload();
+    });
+}
 
 // Runaway NO Button
 noBtn.addEventListener("mouseover", moveButton);
@@ -195,10 +203,3 @@ function moveButton() {
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
-// 8. RESTART BUTTON LOGIC
-const restartBtn = document.getElementById("restartBtn");
-
-restartBtn.addEventListener("click", () => {
-    // Reloads the page to start fresh
-    location.reload(); 
-});
